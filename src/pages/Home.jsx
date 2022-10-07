@@ -20,7 +20,7 @@ const Home = () => {
           {userAppData?.name.split(" ")[0].trim() + "❤️‍🔥"}
         </div>
         <div className="users-wrapper">
-          {allExceptCurrentUser.map((userData) => (
+          {allExceptCurrentUser && allExceptCurrentUser.length && allExceptCurrentUser.map((userData) => (
             <User key={userData.id} userData={userData} />
           ))}
         </div>

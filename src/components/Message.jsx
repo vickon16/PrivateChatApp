@@ -31,7 +31,7 @@ const Message = ({id, chatText, createdAt, from, media}) => {
       });
       setTimeout(() => {
         deleteDoc(docRef).then(() => console.log("deleted successfully"))
-      }, 300000); // delete item after 10mins
+      }, 30000); // delete item after 10mins
     }
   }
 
