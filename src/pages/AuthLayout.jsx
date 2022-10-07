@@ -8,7 +8,7 @@ const AuthLayout = () => {
    const { darkMode} = useGeneralContext();
 
   return (
-    <Wrapper className={`${darkMode && "dark-mode"}`}>
+    <Wrapper className={`${darkMode ? "dark-mode" : ""}`}>
       <Main>
         <Outlet />
       </Main>
@@ -18,11 +18,11 @@ const AuthLayout = () => {
 
 export default AuthLayout;
 
-const Wrapper = styled.div`
+const Wrapper = styled.main`
   width: 100%;
 `;
 
-const Main = styled.main`
+const Main = styled.div`
   width: min(100%, 1300px);
   margin: 0 auto;
   padding: 0 20px;

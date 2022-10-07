@@ -8,7 +8,7 @@ const AppLayout = () => {
   const { darkMode } = useGeneralContext();
 
   return (
-    <Wrapper className={`${darkMode && "dark-mode"}`}>
+    <Wrapper className={`${darkMode ? "dark-mode" : ""}`}>
       <Navbar />
       <Main>
         <Outlet />
@@ -19,11 +19,11 @@ const AppLayout = () => {
 
 export default AppLayout
 
-const Wrapper = styled.div`
+const Wrapper = styled.main`
   width: 100%;
 `
 
-const Main = styled.main`
+const Main = styled.div`
   width: min(100%, 1300px);
   margin: 0 auto;
   box-shadow: var(--shadow);
