@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Ubuntu", sans-serif;
+  user-select: none;
+}
+
+:root {
+  font-size: 17px;
+
+  --color1-Bg : #eee;
+  --color2-White : #333;
+  --color3-Blue : rgb(38, 113, 175);
+  --color4-Gray: rgb(110, 110, 110);
+  --color5-Red : #eb4034;
+  --color6-Dark : rgb(232, 232, 232);
+  --color7-Dark2 : rgba(203, 202, 202, 0.501);
+  --color8-Blue2 : #eee;
+  --color9-Bg2 : rgba(255, 255, 255, 0.6);
+  --active : limegreen;
+  --shadow : rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+:root:has(.dark-mode) {
+  --color1-Bg : #242424;
+  --color2-White : #fee;
+  --color3-Blue : steelblue; /* #0084ff; */
+  --color4-Gray: rgb(174, 173, 173);
+  --color6-Dark : #333;
+  --color7-Dark2 : rgba(119, 119, 119, 0.4);
+  --color8-Blue2 : rgba(70, 131, 180, 0.4);
+  --color9-Bg2 : #202020;
+  --shadow : rgba(210, 210, 210, 0.1) 0px 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body, #root {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--color1-Bg);
+  color: var(--color2-White);
+}
+
+a {
+  text-decoration: none;
+  color: var(--color2-White);
+}
+
+input {
+  outline: none;
+  border-radius: 5px;
+}
+
+ul {
+  list-style: none;
+}
+
+input::placeholder {
+  color: var(--lightGray);
+}
+
+img {
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.btn {
+  padding: 10px;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid var(--color4-Gray);
+  color: var(--color2-White);
+  background-color: var(--color1-Bg);
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  font-size: 1rem;
+}
+
+.btn:hover {
+  scale: 1.05;
+}
+.btn:hover:disabled {
+  scale: none;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.error {
+  text-align: center;
+  color: var(--color5-Red);
+  font-size: .92rem;
+  width: min(100%, 300px);
+  margin: 0 auto;
+  padding: 1rem .5rem 0rem;
+  word-wrap: break-word;
+}
+
+.loader-wrapper {
+  width: fit-content;
+  margin: 1rem auto 0rem;
+}
