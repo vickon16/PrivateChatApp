@@ -88,7 +88,7 @@ const MessageForm = () => {
           value={chatText}
           onChange={(e) => setChatText(e.target.value)}
         />
-        {loading ? <Loader /> : <button className="btn">Send</button>}
+        {loading ? <Loader /> : <button className="btn" disabled={!chatImg && !chatText}>Send</button>}
       </Container>
       {error && <p className="error">{error}</p>}
     </Wrapper>
@@ -103,8 +103,7 @@ const Wrapper = styled.div`
   right: 0;
   left: 0;
   padding: 20px;
-  background-color: var(--color1-Bg);
-  border-top: 1px solid var(--color6-Dark);
+  background-color: var(--color9-Bg2);
 `;
 
 const Container = styled.form`

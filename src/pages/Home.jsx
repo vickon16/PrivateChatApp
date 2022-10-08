@@ -14,7 +14,7 @@ const Home = () => {
   const {navOpen, setNavOpen} = useGeneralContext();
 
   return (
-    <Container>
+    <Container className="home-container">
       <UsersContainer navOpen={navOpen}>
         <div className="current-user">
           {userAppData?.name.split(" ")[0].trim() + "❤️‍🔥"}
@@ -71,6 +71,7 @@ const Container = styled.div`
   overflow: hidden;
   width: 100%;
   height: calc(100vh - 80px);
+  z-index: 0;
 
   @media screen and (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -135,7 +136,8 @@ const MessagesContainer = styled.section`
   margin-bottom: 3rem;
   position: relative;
 
-  .no-conv, .no-conv-big {
+  .no-conv,
+  .no-conv-big {
     font-size: clamp(0.9rem, 1.1vw, 1.1rem);
     color: var(--color4-Gray);
     opacity: 0.8;
@@ -155,9 +157,9 @@ const MessagesContainer = styled.section`
     text-align: center;
     display: none;
 
-    @media screen and (max-width : 768px) {
+    @media screen and (max-width: 768px) {
       display: block;
-    };
+    }
   }
 `;
 
@@ -169,7 +171,9 @@ const MessagesUser = styled.article`
   width: 100%;
   margin-bottom: 1.5rem;
   position: sticky;
-  top: 0;
+  top: -10px;
+  left: 0;
+  right: 0;
   z-index: 2;
   background-color: var(--color9-Bg2);
 
@@ -191,7 +195,8 @@ const AllMessages = styled.article`
   flex-direction: column;
   gap: 10px;
   padding: 0 20px;
-  margin-bottom: 2.8rem;
+  margin-bottom: 2.5rem;
+  z-index: 1;
 
   @media screen and (max-width : 425px) {
     padding: 0 10px;

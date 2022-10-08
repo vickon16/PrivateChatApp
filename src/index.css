@@ -8,6 +8,10 @@
   user-select: none;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   font-size: 17px;
 
@@ -19,7 +23,7 @@
   --color6-Dark : rgb(232, 232, 232);
   --color7-Dark2 : rgba(203, 202, 202, 0.501);
   --color8-Blue2 : #eee;
-  --color9-Bg2 : rgba(250, 250, 250);
+  --color9-Bg2 : rgba(245, 245, 245);
   --active : limegreen;
   --shadow : rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
     rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
@@ -32,10 +36,25 @@
   --color4-Gray: rgb(174, 173, 173);
   --color6-Dark : #333;
   --color7-Dark2 : rgba(119, 119, 119, 0.4);
-  --color8-Blue2 : rgba(70, 131, 180, 0.4);
+  --color8-Blue2 : rgba(53, 96, 132, 0.8);
   --color9-Bg2 : #202020;
   --shadow : rgba(210, 210, 210, 0.1) 0px 10px 15px -3px,
     rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+:root:has(main.dark-mode .home-container) .home-container::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: calc(100vh - 160px);
+  z-index: -1;
+  opacity: 0.3;
+  background: url("../public/stones.jpg") center / cover no-repeat;
 }
 
 ::-webkit-scrollbar {
