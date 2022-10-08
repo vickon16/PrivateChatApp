@@ -3,10 +3,8 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import PreLoader from "../components/PreLoader";
-import { useGeneralContext } from "../context/generalContext";
 
 const AppLayout = () => {
-  const { darkMode } = useGeneralContext();
   const [preLoading, setPreLoading] = useState(true);
 
   useEffect(() => {
@@ -18,7 +16,7 @@ const AppLayout = () => {
   }, []);
 
   return (
-    <Wrapper className={`${darkMode ? "dark-mode" : ""}`}>
+    <Wrapper>
       {preLoading ? (
         <PreLoader />
       ) : (

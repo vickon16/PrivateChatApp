@@ -20,9 +20,13 @@ const ChatContextProvider = ({ children }) => {
   const {state : {user}} = useAuth();
   const {setNavOpen} = useGeneralContext();
 
+  console.log(state.selectedUser, state.selectedUserChats);
+
   const setSelectedUserChats = (data) => setState((prev) => ({ ...prev, selectedUserChats: data }));
 
-  const exitChat = () => setState(initialState);
+  const exitChat = () => setState(prev => ({
+    ...prev, selectedUser: null, text : "", loading: false, error : ""
+  }));
 
   const setSelectedUser = (data) => {
     setLoading(true);

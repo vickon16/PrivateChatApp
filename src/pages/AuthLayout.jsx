@@ -1,14 +1,12 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { useGeneralContext } from "../context/generalContext";
 import { flexCenter } from "../globalFunctions";
 
 const AuthLayout = () => {
-   const { darkMode} = useGeneralContext();
 
   return (
-    <Wrapper className={`${darkMode ? "dark-mode" : ""}`}>
+    <Wrapper>
       <Main>
         <Outlet />
       </Main>

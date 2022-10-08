@@ -75,6 +75,24 @@ const Container = styled.div`
   height: calc(100vh - 80px);
   z-index: 0;
 
+  &::before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.3;
+    background-image: ${(props) => props.theme.BgImg};
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+
   @media screen and (max-width: 768px) {
     grid-template-columns: 1fr;
   } ;

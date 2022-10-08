@@ -1,5 +1,5 @@
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components'
 import { useChat } from '../context/chatContext';
 import { useAuth } from '../context/userAuthContext';
@@ -8,6 +8,7 @@ import { flexCenter, formatDateAgo } from '../globalFunctions';
 
 const Message = ({id, chatText, createdAt, from, media}) => {
   const scrollRef = useRef();
+  const [textDelete, setTextDelete] = useState(false);
   const {state: { user}} = useAuth();
   const {state : {selectedUser}} = useChat();
 
@@ -31,23 +32,28 @@ const Message = ({id, chatText, createdAt, from, media}) => {
       });
       setTimeout(() => {
         deleteDoc(docRef).then(() => console.log("deleted successfully"))
-      }, 30000); // delete item after 10mins
+      }, 15000); // delete item after 15sec
     }
   }
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({behavior : "smooth"});
+    setTextDelete(false);
+    if (chatText === "🚫 deleted") setTextDelete(true);
+
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatText])
 
   const {state : {userAppData}} = useAuth();
 
   return (
-    <Container own={from === userAppData.id} ref={scrollRef}>
+    <Container own={from === userAppData.id} ref={scrollRef} className={textDelete && "deleted"}>
       <Deviation
         owner={from === userAppData.id ? "me" : "friend"}
-        onClick={handleClick}>
+        onClick={handleClick}
+        className="deviation"
+        >
         {media && <img src={media} alt={chatText} />}
-        {chatText === "🚫 deleted" ? (
+        {textDelete ? (
           <p className="deleted">{chatText}</p>
         ) : (
           <>
@@ -71,7 +77,7 @@ const Container = styled.aside`
   align-items: ${({ own }) => (own ? "flex-end" : "flex-start")};
   cursor: pointer;
 
-  &:has(.deleted) {
+  &.deleted {
     pointer-events: none;
     cursor: not-allowed;
   }
