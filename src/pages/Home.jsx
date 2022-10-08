@@ -14,8 +14,8 @@ const Home = () => {
   const {navOpen, setNavOpen} = useGeneralContext();
 
   return (
-  <Container className="home-container">
-    <UsersContainer navOpen={navOpen}>
+  <Container className="home-container" onClick={() => setNavOpen(false)}>
+    <UsersContainer navOpen={navOpen} onClick={e => e.stopPropagation()}>
       <div className="current-user">
         {userAppData?.name.split(" ")[0].trim() + "❤️‍🔥"}
       </div>
@@ -140,7 +140,7 @@ const UsersContainer = styled.section`
     bottom: 0;
     z-index: 3;
     min-width: none;
-    width: min(100%, 320px);
+    width: min(100%, 300px);
     transform: ${({ navOpen }) =>
       navOpen ? "translateX(0)" : "translateX(120%)"};
 
