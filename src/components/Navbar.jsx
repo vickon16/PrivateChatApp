@@ -32,7 +32,7 @@ const Navbar = () => {
       <Nav>
         <h2>
           <Link to="/" className="nav-title">
-            Messenger
+            Chat App
           </Link>
         </h2>
         <NavLinks>
@@ -72,7 +72,7 @@ const Wrapper = styled.div`
   background-color: var(--color9-Bg2);
 `;
 const Nav = styled.nav`
-  width: min(100%, 1320px);
+  width: min(100%, 1300px);
   margin: 0 auto;
   ${flexCenter("space-between")};
   height: 80px;
@@ -83,6 +83,10 @@ const Nav = styled.nav`
 
   h2 {
     font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+
+    a {
+      font-family: "Space Grotesk", sans-serif;
+    }
   }
 
   @media screen and (max-width: 425px) {

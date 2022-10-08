@@ -10,56 +10,58 @@ import { useGeneralContext } from "../context/generalContext";
 
 const Home = () => {
   const {state: { userAppData, allExceptCurrentUser }} = useAuth();
-  const {state: { selectedUser, selectedUserChats }} = useChat();
+  const {state: { selectedUser, selectedUserChats }, exitChat} = useChat();
   const {navOpen, setNavOpen} = useGeneralContext();
 
   return (
-    <Container className="home-container">
-      <UsersContainer navOpen={navOpen}>
-        <div className="current-user">
-          {userAppData?.name.split(" ")[0].trim() + "❤️‍🔥"}
-        </div>
-        <div className="users-wrapper">
-          {allExceptCurrentUser && allExceptCurrentUser.length && allExceptCurrentUser.map((userData) => (
-            <User key={userData.id} userData={userData} />
-          ))}
-        </div>
-        <MdOutlineClose className="close" onClick={() => setNavOpen(false)} />
-      </UsersContainer>
-      <MessagesContainer>
-        {selectedUser ? (
-          <>
-            <MessagesUser>
-              <img
-                src={selectedUser?.image?.url || "/user-icon.png"}
-                alt="avatar"
-              />
-              <h3>{selectedUser.name}</h3>
-            </MessagesUser>
-            <AllMessages>
-              {selectedUserChats && selectedUserChats.length ? (
-                selectedUserChats.map((msg) => (
-                  <Message {...msg} key={msg.id} />
-                ))
-              ) : (
-                <p className="no-conv">No Conversation, Please Create one below. </p>
-              )}
-            </AllMessages>
-            <MessageForm />
-          </>
-        ) : (
-          <>
-            <p className="no-conv">Select User to start a conversation</p>
-            <div className="no-conv-big">...No Conversation Yet!...</div>
-            <div className="button-wrapper">
-              <button className="btn" onClick={() => setNavOpen(true)}>
-                Select User
-              </button>
-            </div>
-          </>
-        )}
-      </MessagesContainer>
-    </Container>
+  <Container className="home-container">
+    <UsersContainer navOpen={navOpen}>
+      <div className="current-user">
+        {userAppData?.name.split(" ")[0].trim() + "❤️‍🔥"}
+      </div>
+      <div className="users-wrapper">
+        {allExceptCurrentUser && allExceptCurrentUser.length && allExceptCurrentUser.map((userData) => (
+          <User key={userData.id} userData={userData} />
+        ))}
+      </div>
+      <MdOutlineClose className="close" onClick={() => setNavOpen(false)} />
+    </UsersContainer>
+    <MessagesContainer>
+      {selectedUser ? (
+        <>
+          <MessagesUser>
+            <img
+              src={selectedUser?.image?.url || "/user-icon.png"}
+              alt="avatar"
+            />
+            <h3>{selectedUser.name}</h3>
+            <button className="btn" onClick={exitChat}>Exit Chat</button>
+          </MessagesUser>
+          <AllMessages>
+            {selectedUserChats && selectedUserChats.length ? (
+              selectedUserChats.map((msg) => (
+                <Message {...msg} key={msg.id} />
+              ))
+            ) : (
+              <p className="no-conv">No Conversation, Please Create one below. </p>
+            )}
+          </AllMessages>
+          <MessageForm />
+        </>
+      ) : (
+        <>
+          <p className="no-conv">Select User to start a conversation</p>
+          <div className="no-conv-big">...No Conversation Yet!...</div>
+          <div className="button-wrapper">
+            <button className="btn" onClick={() => setNavOpen(true)}>
+              Select User
+            </button>
+          </div>
+        </>
+      )}
+    </MessagesContainer>
+  </Container>
+
   );
 };
 export default Home;
@@ -176,6 +178,7 @@ const MessagesUser = styled.article`
   right: 0;
   z-index: 2;
   background-color: var(--color9-Bg2);
+  flex-wrap: wrap;
 
   img {
     width: 30px;
@@ -188,6 +191,19 @@ const MessagesUser = styled.article`
     font-size: clamp(1rem, 1.4vw, 1.4rem);
     letter-spacing: 1px;
   }
+
+  button {
+    margin-left: auto;
+    padding: 7px 10px;
+  }
+
+  @media screen and (max-width : 350px) {
+    justify-content: center;
+
+    button {
+      margin: 0;
+    }
+  };
 `;
 
 const AllMessages = styled.article`

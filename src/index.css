@@ -51,7 +51,7 @@ html {
   left: 0;
   bottom: 0;
   width: 100%;
-  height: calc(100vh - 160px);
+  height: 100%;
   z-index: -1;
   opacity: 0.3;
   background: url("../public/stones.jpg") center / cover no-repeat;

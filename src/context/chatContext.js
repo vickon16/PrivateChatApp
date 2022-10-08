@@ -22,6 +22,8 @@ const ChatContextProvider = ({ children }) => {
 
   const setSelectedUserChats = (data) => setState((prev) => ({ ...prev, selectedUserChats: data }));
 
+  const exitChat = () => setState(initialState);
+
   const setSelectedUser = (data) => {
     setLoading(true);
     setNavOpen(false);
@@ -74,6 +76,7 @@ const ChatContextProvider = ({ children }) => {
         setText,
         setLoading,
         setError,
+        exitChat
       }}>
       {children}
     </ChatContext.Provider>
