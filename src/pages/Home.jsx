@@ -13,8 +13,13 @@ const Home = () => {
   const {state: { selectedUser, selectedUserChats }, exitChat} = useChat();
   const {navOpen, setNavOpen} = useGeneralContext();
 
+  const handleSelectUser = (e) => {
+    e.stopPropagation();
+    setNavOpen(true);
+  }
+
   return (
-  <Container className="home-container" onClick={() => setNavOpen(false)}>
+  <Container className="home-container" onClick={() => setNavOpen(false)} >
     <UsersContainer navOpen={navOpen} onClick={e => e.stopPropagation()}>
       <div className="current-user">
         {userAppData?.name.split(" ")[0].trim() + "❤️‍🔥"}
@@ -53,7 +58,7 @@ const Home = () => {
           <p className="no-conv">Select User to start a conversation</p>
           <div className="no-conv-big">...No Conversation Yet!...</div>
           <div className="button-wrapper">
-            <button className="btn" onClick={() => setNavOpen(true)}>
+            <button className="btn" onClick={handleSelectUser}>
               Select User
             </button>
           </div>
