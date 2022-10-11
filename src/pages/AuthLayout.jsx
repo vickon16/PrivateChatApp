@@ -4,12 +4,9 @@ import styled from "styled-components";
 import { flexCenter } from "../globalFunctions";
 
 const AuthLayout = () => {
-
   return (
     <Wrapper>
-      <Main>
-        <Outlet />
-      </Main>
+      <Main><Outlet /></Main>
     </Wrapper>
   );
 };

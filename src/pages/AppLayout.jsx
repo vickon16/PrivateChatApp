@@ -7,6 +7,7 @@ import PreLoader from "../components/PreLoader";
 const AppLayout = () => {
   const [preLoading, setPreLoading] = useState(true);
 
+  //a timer for my app preloader, 4seconds before displaying app
   useEffect(() => {
     const timer = setTimeout(() => {
       setPreLoading(false);
@@ -23,8 +24,7 @@ const AppLayout = () => {
         <>
           <Navbar />
           <Main><Outlet /></Main>
-        </>
-      )}
+        </>)}
     </Wrapper>
   );
 };

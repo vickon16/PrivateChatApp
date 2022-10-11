@@ -19,12 +19,12 @@ export default createGlobalStyle`
     --color2-White : ${(props) => props.theme.color2White};
     --color3-Blue : ${(props) => props.theme.color3Blue};
     --color4-Gray: ${(props) => props.theme.color4Gray};
-    --color5-Red : "#eb4034";
+    --color5-Red : ${(props) => props.theme.color5Red};
     --color6-Dark : ${(props) => props.theme.color6Dark};
     --color7-Dark2 : ${(props) => props.theme.color7Dark2};
     --color8-Blue2 : ${(props) => props.theme.color8Blue2};
     --color9-Bg2 : ${(props) => props.theme.color9Bg2};
-    --active : limegreen;
+    --active : ${(props) => props.theme.active};
     --shadow : ${(props) => props.theme.shadow};
   }
 

@@ -22,6 +22,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={
+            // if user doesnt exist, navigate to login page
             state.user === null ? <Navigate to="/auth/login" /> : <AppLayout />
             }>
             <Route index element={
@@ -32,6 +33,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="/auth" element={
+            // if user exist, navigate to home page
             state.user !== null ? <Navigate to="/" /> : <AuthLayout />
             }>
             <Route path="register" element={<Register />} />

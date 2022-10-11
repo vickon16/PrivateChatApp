@@ -2,48 +2,31 @@
 import {flexCenter} from "../globalFunctions";
 import styled from 'styled-components';
 import { useChat } from "../context/chatContext";
+import {BsImageFill} from "react-icons/bs";
 import { useAuth } from "../context/userAuthContext";
-import { useEffect, useState } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
-import { collectionNames, db } from "../firebase-config";
 
 const User = ({userData}) => {
+  const {state : {userAppData : {lastMsg}}} = useAuth();
    const {state : {selectedUser}, setSelectedUser } = useChat();
-   const {state : {userAppData}} = useAuth();
-   const [lastMsgData, setLastMsgData] = useState("");
-
-  const {from, unread, chatText} = lastMsgData;
+   const {image, name, isOnline, id} = userData;
    
-   const user1 = userAppData.id;
-   const user2 = selectedUser?.id;
-   const selected = selectedUser?.name === userData?.name
-   const id = user1 > user2 ?  `${user1 + "-" + user2}` :  `${user2 + "-" + user1}`; 
-   
-   useEffect(() => {
-    setLastMsgData("");
-    const docRef = doc(db, `${collectionNames.lastMsg}`, id);
-    const unSub = onSnapshot(docRef, snapshot => {
-      if (!snapshot.data()) return;
-      setLastMsgData(snapshot.data());
-    })
+   const selected = selectedUser?.id === id // if the selected user matches the the id of any of the users in the room
 
-    return () => unSub();
-   }, [user2])
+  //  if the lastMsg from the currentUser is present, and the last message is from any of the user in the list, display last messages
+   const userTarget = lastMsg && lastMsg.from === userData.id
 
   return (
     <Container selected={selected} onClick={() => setSelectedUser(userData)}>
       <UserInfo>
-        <img src={userData?.image?.url || "/user-icon.png"} alt="avatar" />
+        <img src={image?.url || "/user-icon.png"} alt="avatar" />
         <div className="user-detail">
-          <h4>{userData?.name}</h4>
-          {selected && lastMsgData && (
-            <small>
-              <span>{from === user1 ? "Me" : "Friend"}</span> : {chatText}
-            </small>
+          <h4>{name}</h4>
+          {userTarget && (
+            <small><span>Friend : </span>{lastMsg.chatText || <BsImageFill />}</small>
           )}
         </div>
-        {selected && from !== user1 && unread && <small className="unread">new</small>}
-        <UserStatus status={userData?.isOnline} />
+        {userTarget && <small className="unread">new</small>}
+        <UserStatus status={isOnline} />
       </UserInfo>
     </Container>
   );
@@ -91,6 +74,12 @@ const UserInfo = styled.div`
 
       span {
         color: var(--active);
+      }
+
+      svg {
+        color: var(--color4-Gray);
+        margin-left: .3rem;
+        vertical-align: bottom;
       }
     }
   }

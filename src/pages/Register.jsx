@@ -17,6 +17,7 @@ const Register = () => {
   const [{ name, email, password }, setData] = useState(initialData);
   const navigate = useNavigate();
 
+  // form handle
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData((prev) => ({ ...prev, [name]: value }));
@@ -27,19 +28,24 @@ const Register = () => {
     setLoading(true);
     setError("");
 
+    // if there is no email and password, return
     if (!name || !email || !password) {
       setError("All Fields are Required");
       return;
     }
 
+    // else, sign user in 
     createUserWithEmailAndPassword(auth, email, password)
       .then((res) => {
         const id = res.user.uid;
         const docRef = doc(collectionRef, id);
+        
+        // after signup user, set user details to the database
         setDoc(docRef, {
-          id, name, email, createdAt: Timestamp.now(), isOnline: true,
+          id, name, email, createdAt: Timestamp.now(), isOnline: true, lastMsg : ""
         })
         .then(() => {
+          // reset form data and navigate to home page
           setData(initialData)
           setLoading(false)
           navigate("/")

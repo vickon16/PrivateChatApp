@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { collection, doc, getDoc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
+import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import { createContext, useContext, useState } from "react";
 import { collectionNames, db } from "../firebase-config";
 import { useGeneralContext } from "./generalContext";
@@ -10,7 +10,6 @@ const ChatContext = createContext();
 const initialState = {
   selectedUser: null,
   selectedUserChats : null,
-  text: "",
   loading: false,
   error: "",
 };
@@ -19,8 +18,6 @@ const ChatContextProvider = ({ children }) => {
   const [state, setState] = useState(initialState);
   const {state : {user}} = useAuth();
   const {setNavOpen} = useGeneralContext();
-
-  console.log(state.selectedUser, state.selectedUserChats);
 
   const setSelectedUserChats = (data) => setState((prev) => ({ ...prev, selectedUserChats: data }));
 
@@ -31,15 +28,20 @@ const ChatContextProvider = ({ children }) => {
   const setSelectedUser = (data) => {
     setLoading(true);
     setNavOpen(false);
+
+    // get the selected userData when it is selected
     setState((prev) => ({ ...prev, selectedUser: data }))
 
-    const user1 = user.uid;
-    const user2 = data.id;
+    const user1 = user.uid; // current user id
+    const user2 = data.id; // selected user id
     
-    const id = user1 > user2 ?  `${user1 + "-" + user2}` :  `${user2 + "-" + user1}`; 
-    const msgRef = collection(db, `${collectionNames.messages}`, id, `${collectionNames.chat}`);
+    const mergeId = user1 > user2 ?  `${user1 + "-" + user2}` :  `${user2 + "-" + user1}`; 
+
+    const msgRef = collection(db, `${collectionNames.messages}`, mergeId, `${collectionNames.chat}`);
+    // get the message chat sub collection and query by "createdAt"
     const q = query(msgRef, orderBy("createdAt", "asc"));
 
+    // get all the chats when user is selected
     onSnapshot(q, snapshot => {
       const allChats = snapshot.docs.map(doc => ({
         ...doc.data(),
@@ -49,19 +51,13 @@ const ChatContextProvider = ({ children }) => {
       setLoading(false)
     })
 
-    // get unread documents
-    const docRef = doc(db, `${collectionNames.lastMsg}`, id);
-    getDoc(docRef).then((docSnap) => {
-      if(!docSnap.data()) return; // if there are no unread messages, return
-      
-      // updateDocument only if another user clicks on it
-      if (docSnap.data().from !== user1) {
-        updateDoc(docRef, {unread : false})
-      }
-    }).catch(err => setError(err.message))
+    // set lastMsg back to empty string
+    // when user1 selects a user with an unread message.
+    // we look into the user2 document, which tell him that we have seen his message.
+    const docRef = doc(db, `${collectionNames.chatApp}`, user1);
+    updateDoc(docRef, { lastMsg: "" });
   };
 
-  const setText = (data) => setState((prev) => ({ ...prev, text: data }));
 
   const setLoading = (state) =>
     setState((prev) => ({ ...prev, loading: state }));
@@ -77,7 +73,6 @@ const ChatContextProvider = ({ children }) => {
       value={{
         state,
         setSelectedUser,
-        setText,
         setLoading,
         setError,
         exitChat

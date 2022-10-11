@@ -12,20 +12,21 @@ import { useGeneralContext } from "../context/generalContext";
 import { MdDarkMode, MdOutlineDarkMode } from "react-icons/md";
 
 const Navbar = () => {
-  const {
-    state: { user, userAppData },
-    setError,
-  } = useAuth();
-  const {darkMode, setNavOpen, toggleMode } = useGeneralContext();
+const {state: { user, userAppData }} = useAuth();
+const {darkMode, setNavOpen, toggleMode } = useGeneralContext();
 
-  const logout = async () => {
+const logout = () => {
+  // update doc
+  const confirm = window.confirm("Are you sure you want to Log out?");
+  if (!confirm) return;
+
+  const docRef = doc(collectionRef, user?.uid);
+  updateDoc(docRef, { isOnline: false }).then(() => {
+    // afterwards, sign user out
     signOut(auth)
-      .then(() => {
-        const docRef = doc(collectionRef, user?.uid);
-        updateDoc(docRef, { isOnline: false });
-      })
-      .catch((err) => setError(`Log out Unsuccessfull. ${err.message}`));
-  };
+  });
+  
+};
 
   return (
     <Wrapper>

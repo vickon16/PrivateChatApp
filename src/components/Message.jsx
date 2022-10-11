@@ -12,30 +12,37 @@ const Message = ({id, chatText, createdAt, from, media}) => {
   const {state: { user}} = useAuth();
   const {state : {selectedUser}} = useChat();
 
-  const user1 = user.uid;
-  const user2 = selectedUser.id;
+  const user1 = user.uid; // current user id
+  const user2 = selectedUser.id; //gotten when current user selects another user
 
-  const rootId = user1 > user2 ?  `${user1 + "-" + user2}` :  `${user2 + "-" + user1}`; 
+  // creating a unique id for -current user & -selected user conversation
+  const mergeId = user1 > user2 ?  `${user1 + "-" + user2}` :  `${user2 + "-" + user1}`; 
 
-  const handleClick = async () => {
+  const handleDelete = async () => {
     if (from !== user1) return; // means the message clicked is not a user1 message and cannot be deleted
     const confirm = window.confirm("Delete message?");
 
     if (confirm) {
-      const docRef = doc(db, `${collectionNames.messages}`, rootId, `${collectionNames.chat}`, id);
-
+      const docRef = doc(db, `${collectionNames.messages}`, mergeId, `${collectionNames.chat}`, id);
+      
+      // after confirming delete, check if media is present and delete the Doc media message
       if (media) {
         deleteDoc(docRef).then(() => console.log("deleted successfully"))
       }
+
+      // if both media and chat is present, update the doc, and set chat text to "deleted"
       updateDoc(docRef, { chatText: "🚫 deleted" }).then(() => {
         console.log("updated successfully");
       });
+
+      // delete item after 15sec in conversation page
       setTimeout(() => {
         deleteDoc(docRef).then(() => console.log("deleted successfully"))
-      }, 15000); // delete item after 15sec
+      }, 15000);
     }
   }
 
+  // handle UI representation of the deleted message
   useEffect(() => {
     setTextDelete(false);
     if (chatText === "🚫 deleted") setTextDelete(true);
@@ -49,7 +56,7 @@ const Message = ({id, chatText, createdAt, from, media}) => {
     <Container own={from === userAppData.id} ref={scrollRef} className={textDelete && "deleted"}>
       <Deviation
         owner={from === userAppData.id ? "me" : "friend"}
-        onClick={handleClick}
+        onClick={handleDelete}
         className="deviation"
         >
         {media && <img src={media} alt={chatText} />}

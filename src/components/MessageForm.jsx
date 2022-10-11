@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, setDoc, Timestamp } from "firebase/firestore";
+import { addDoc, collection, doc, Timestamp, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
 import { FaUpload } from "react-icons/fa";
@@ -15,42 +15,53 @@ const MessageForm = () => {
   const {state: { user}} = useAuth();
   const {state : {selectedUser, loading, error}, setLoading, setError} = useChat();
 
-  const user1 = user.uid;
-  const user2 = selectedUser.id;
+  const user1 = user.uid; // current user Id
+  const user2 = selectedUser.id; // selected user Id
 
-  // id would be the same and would not be overwritten when more chats are added to the sub collectionn "chat"
-  const id = user1 > user2 ?  `${user1 + "-" + user2}` :  `${user2 + "-" + user1}`; 
 
-  async function AddDoc(data) {
+  // creating a unique merged id for -current user & -selected user conversation
+  const mergeId = user1 > user2 ?  `${user1 + "-" + user2}` :  `${user2 + "-" + user1}`; 
+
+  async function AddDoc(url) {
+    const data = {
+      chatText,
+      from: user1,
+      to: user2,
+      createdAt: Timestamp.now(),
+      media: url,
+    };
+
     // creating a firebase sub collection
-    addDoc(collection(db, `${collectionNames.messages}`, id, `${collectionNames.chat}`), {
-      chatText, from: user1, to: user2, 
-      createdAt: Timestamp.now(), media: data,
-    })
-    .then(() => {
-      setChatText("");
-      setChatImg("");
-      setLoading(false);
-    })
-    .catch((err) => setError(err.message));
+    // database | messages | mergeId | chat | document
+    const docRefce = collection( db, `${collectionNames.messages}`, mergeId, `${collectionNames.chat}`)
+    addDoc(docRefce, { ...data })
+      .then(() => {
+        // set last message on every message sent to the selected user
+        // to current user document path
+        const docRef = doc(db, `${collectionNames.chatApp}`, user2);
+        updateDoc(docRef, { lastMsg: { ...data } })
+          .then(() => {
+            // clear the formal lastSeen message from the second user, acknoledging
+            // that we have seen the last message
+            const docRef2 = doc(db, `${collectionNames.chatApp}`, user1);
+            updateDoc(docRef2, { lastMsg: "" });
+          })
 
-    // set last message on every message sent
-    setDoc(doc(db, `${collectionNames.lastMsg}`, id), {
-      chatText, from: user1, to: user2, 
-      createdAt: Timestamp.now(), media: data, 
-      unread : true
-    }).then(() => {
-      setChatText("");
-      setChatImg("");
-      setLoading(false);
-    })
-    .catch((err) => setError(err.message));
+        // reset Text and Img
+        setChatText("");
+        setChatImg("");
+        setLoading(false);
+      })
+      .catch((err) => setError(err.message));
   }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     
+    // if there is an Image, upload the image before adding document to the 
+    // messages collection
     if (chatImg) {
       const imgName = `${new Date().getTime()}-${chatImg.name}`;
       const imgRef = ref(storage, `${storageNames.chatAppImages_ChatImages}${imgName}`);
@@ -62,6 +73,7 @@ const MessageForm = () => {
       return;
     }
 
+    // if there is no image, just add the doc without it
     AddDoc("");
   };
 

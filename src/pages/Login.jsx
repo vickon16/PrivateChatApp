@@ -16,6 +16,7 @@ const Login = () => {
   const [{ email, password }, setData] = useState(initialData);
   const navigate = useNavigate();
 
+  // form handle
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData((prev) => ({ ...prev, [name]: value }));
@@ -26,17 +27,23 @@ const Login = () => {
     setLoading(true);
     setError("");
 
+    // if there is no email and password, return
     if (!email || !password) {
       setError("All Fields are Required");
       return;
     }
 
+    // else, sign user in 
     signInWithEmailAndPassword(auth, email, password)
       .then((res) => {
         const id = res.user.uid;
         const docRef = doc(collectionRef, id);
+
+        // after signin user in, update user details to database
+        // with isOnline set to true
         updateDoc(docRef, {isOnline: true})
           .then(() => {
+            // reset form data and navigate to home page
             setData(initialData);
             setLoading(false)
             navigate("/")
