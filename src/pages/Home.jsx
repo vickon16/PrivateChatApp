@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import MessageForm from "../components/MessageForm";
-import User from "../components/User";
+import User, { UserStatus } from "../components/User";
 import { useChat } from "../context/chatContext";
 import { useAuth } from "../context/userAuthContext";
 import { flexCenter } from "../globalFunctions";
 import Message from "../components/Message";
 import {MdOutlineClose} from "react-icons/md";
 import { useGeneralContext } from "../context/generalContext";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const {state: { userAppData, allExceptCurrentUser }} = useAuth();
@@ -47,11 +48,14 @@ const Home = () => {
           // two diffrent UI for when the user is selected or not
           <>
             <MessagesUser>
-              <img
-                src={selectedUser?.image?.url || "/user-icon.png"}
-                alt="avatar"
-              />
-              <h3>{selectedUser.name}</h3>
+              <Link to={`/selected-user-profile`} className="selected-user">
+                <img
+                  src={selectedUser?.image?.url || "/user-icon.png"}
+                  alt="avatar"
+                />
+                <h3>{selectedUser.name}</h3>
+                <UserStatus status={selectedUser?.isOnline} />
+              </Link>
               <button className="btn" onClick={exitChat}>
                 Exit Chat
               </button>
@@ -235,7 +239,7 @@ const MessagesContainer = styled.section`
 const MessagesUser = styled.article`
   border-bottom: 2px solid var(--color6-Dark);
   padding: 20px 10px 20px 20px;
-  ${flexCenter("flex-start")};
+  ${flexCenter("space-between")};
   gap: 10px;
   width: 100%;
   margin-bottom: 1.5rem;
@@ -246,6 +250,12 @@ const MessagesUser = styled.article`
   z-index: 2;
   background-color: var(--color9-Bg2);
   flex-wrap: wrap;
+
+  .selected-user {
+    ${flexCenter()};
+    gap: .5rem;
+    cursor: pointer;
+  }
 
   img {
     width: 30px;
@@ -260,7 +270,6 @@ const MessagesUser = styled.article`
   }
 
   button {
-    margin-left: auto;
     padding: 7px 10px;
   }
 

@@ -42,7 +42,7 @@ const logout = () => {
           </Mode>
           {user !== null ? (
             <>
-              <NavLink to="/profile">
+              <NavLink to="/my-profile">
                 <img
                   src={userAppData?.image?.url || "/user-icon.png"}
                   alt="profile-img"

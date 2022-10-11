@@ -31,7 +31,6 @@ const ChatContextProvider = ({ children }) => {
 
     // get the selected userData when it is selected
     setState((prev) => ({ ...prev, selectedUser: data }))
-
     const user1 = user.uid; // current user id
     const user2 = data.id; // selected user id
     
@@ -67,6 +66,7 @@ const ChatContextProvider = ({ children }) => {
     setState((prev) => ({ ...prev, error: msg }));
     setTimeout(() => setState((prev) => ({ ...prev, error: "" })), 4000);
   };
+
 
   return (
     <ChatContext.Provider

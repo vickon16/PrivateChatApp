@@ -14,7 +14,7 @@ export default createGlobalStyle`
   }
 
   :root {
-    font-size: 17px;
+    font-size: 16px;
     --color1-Bg : ${(props) => props.theme.color1Bg} ;
     --color2-White : ${(props) => props.theme.color2White};
     --color3-Blue : ${(props) => props.theme.color3Blue};

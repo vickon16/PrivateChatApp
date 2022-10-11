@@ -63,6 +63,15 @@ const MessageForm = () => {
     // if there is an Image, upload the image before adding document to the 
     // messages collection
     if (chatImg) {
+      // convert image to bytes
+      const imgSize = chatImg.size / 1024;
+      // check if image size is greater than 2.5mb
+      if (imgSize > 2500) {
+        setError("Files size is too large, Select another image");
+        setChatImg("");
+        return;
+      }
+      
       const imgName = `${new Date().getTime()}-${chatImg.name}`;
       const imgRef = ref(storage, `${storageNames.chatAppImages_ChatImages}${imgName}`);
       uploadBytes(imgRef, chatImg).then((snapshot) => {

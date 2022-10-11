@@ -5,8 +5,8 @@ import Login from "./pages/Login";
 import AppLayout from "./pages/AppLayout";
 import AuthLayout from "./pages/AuthLayout";
 import { useAuth } from "./context/userAuthContext";
-import Profile from "./pages/Profile";
-import ChatContextProvider from "./context/chatContext";
+import MyProfile from "./pages/MyProfile";
+import SelectedUserProfile from "./pages/SelectedUserProfile";
 import GlobalCSS from "./globalCSS";
 import { ThemeProvider } from "styled-components";
 import { useGeneralContext } from "./context/generalContext";
@@ -25,12 +25,9 @@ const App = () => {
             // if user doesnt exist, navigate to login page
             state.user === null ? <Navigate to="/auth/login" /> : <AppLayout />
             }>
-            <Route index element={
-              <ChatContextProvider>
-                <Home />
-              </ChatContextProvider>
-            } />
-            <Route path="/profile" element={<Profile />} />
+            <Route index element={<Home />} />
+            <Route path="/my-profile" element={<MyProfile />} />
+            <Route path="/selected-user-profile" element={<SelectedUserProfile />} />
           </Route>
           <Route path="/auth" element={
             // if user exist, navigate to home page

@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import PreLoader from "../components/PreLoader";
+import ChatContextProvider from "../context/chatContext";
 
 const AppLayout = () => {
   const [preLoading, setPreLoading] = useState(true);
@@ -23,7 +24,9 @@ const AppLayout = () => {
       ) : (
         <>
           <Navbar />
-          <Main><Outlet /></Main>
+          <ChatContextProvider>
+            <Main><Outlet /></Main>
+          </ChatContextProvider>
         </>)}
     </Wrapper>
   );

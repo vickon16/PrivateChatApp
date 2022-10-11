@@ -10,16 +10,25 @@ import { doc, updateDoc } from "firebase/firestore";
 import Loader from "../components/Loader";
 import { Link } from "react-router-dom";
 
-const Profile = () => {
+const MyProfile = () => {
   const [img, setImg] = useState("");
   const { 
     state: { user, userAppData, loading, error }, setError, setLoading,
   } = useAuth();
 
   useEffect(() => {
-
     // if there is no img or it is undefined, return
     if (!img || img === undefined) return;
+    // convert img size to bytes 
+    const imgSize = img.size / 1024; 
+    // check if image size is greater than 2.5mb
+    if (imgSize > 2500) {
+      setError("Files size is too large, Select another image")
+      setImg("");
+      return;
+    }
+
+    // else
     setLoading(true);
     setError("");
 
@@ -73,6 +82,7 @@ const Profile = () => {
               type="file"
               id="photo"
               accept="image/*"
+              disabled={loading}
               style={{ display: "none" }}
               onChange={(e) => setImg(e.target.files[0])}
             />
@@ -95,7 +105,7 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default MyProfile;
 
 const Wrapper = styled.section`
   width: 100%;
