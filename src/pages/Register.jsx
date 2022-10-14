@@ -48,14 +48,15 @@ const Register = () => {
   return (
     <section>
       <h3>Create An Account</h3>
-      <form onSubmit={handleSubmit}>
+      <form autoComplete="off" onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="regName">Name</label>
           <input
             type="text"
             id="regName"
             value={name}
-            onChange={e => setName(e.target.value)}
+            autoComplete="false"
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div className="input-group">
@@ -64,7 +65,8 @@ const Register = () => {
             type="email"
             id="regEmail"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            autoComplete="false"
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="input-group">
@@ -73,7 +75,8 @@ const Register = () => {
             type="password"
             id="regPassword"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            autoComplete="new-password"
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         {state.error && <p className="error">{state.error}</p>}

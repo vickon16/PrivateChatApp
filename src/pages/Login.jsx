@@ -45,14 +45,15 @@ const Login = () => {
   return (
     <section>
       <h3>Log In to your account</h3>
-      <form onSubmit={handleSubmit}>
+      <form autoComplete="off" onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="loginEmail">Email</label>
           <input
             type="email"
             id="loginEmail"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            autoComplete="false"
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="input-group">
@@ -61,7 +62,8 @@ const Login = () => {
             type="password"
             id="loginPassword"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            autoComplete="new-password"
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         {state.error && <p className="error">{state.error}</p>}
