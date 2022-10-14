@@ -49,33 +49,33 @@ const Register = () => {
     <section>
       <h3>Create An Account</h3>
       <form onSubmit={handleSubmit}>
-        <article>
-          <label htmlFor="name">Name</label>
+        <div className="input-group">
+          <label htmlFor="regName">Name</label>
           <input
             type="text"
-            id="name"
+            id="regName"
             value={name}
             onChange={e => setName(e.target.value)}
           />
-        </article>
-        <article>
-          <label htmlFor="email">Email</label>
+        </div>
+        <div className="input-group">
+          <label htmlFor="regEmail">Email</label>
           <input
             type="email"
-            id="email"
+            id="regEmail"
             value={email}
             onChange={e => setEmail(e.target.value)}
           />
-        </article>
-        <article>
-          <label htmlFor="password">Password</label>
+        </div>
+        <div className="input-group">
+          <label htmlFor="regPassword">Password</label>
           <input
             type="password"
-            id="password"
+            id="regPassword"
             value={password}
             onChange={e => setPassword(e.target.value)}
           />
-        </article>
+        </div>
         {state.error && <p className="error">{state.error}</p>}
         {state.loading ? (
           <Loader />

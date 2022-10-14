@@ -46,24 +46,24 @@ const Login = () => {
     <section>
       <h3>Log In to your account</h3>
       <form onSubmit={handleSubmit}>
-        <article>
-          <label htmlFor="email">Email</label>
+        <div className="input-group">
+          <label htmlFor="loginEmail">Email</label>
           <input
             type="email"
-            id="email"
+            id="loginEmail"
             value={email}
             onChange={e => setEmail(e.target.value)}
           />
-        </article>
-        <article>
-          <label htmlFor="password">Password</label>
+        </div>
+        <div className="input-group">
+          <label htmlFor="loginPassword">Password</label>
           <input
             type="password"
-            id="password"
+            id="loginPassword"
             value={password}
             onChange={e => setPassword(e.target.value)}
           />
-        </article>
+        </div>
         {state.error && <p className="error">{state.error}</p>}
         {state.loading ? (
           <Loader />

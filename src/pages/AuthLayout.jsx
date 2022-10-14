@@ -42,7 +42,7 @@ const Main = styled.div`
       user-select: none;
       width: 100%;
 
-      > article {
+      > .input-group {
         margin-top: 20px;
 
         input {
