@@ -6,22 +6,12 @@ import { auth, collectionRef } from "../firebase-config";
 import Loader from "../components/Loader";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 
-const initialData = {
-  name: "",
-  email: "",
-  password: "",
-};
-
 const Register = () => {
   const { state, setLoading, setError } = useAuth();
-  const [{ name, email, password }, setData] = useState(initialData);
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const navigate = useNavigate();
-
-  // form handle
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData((prev) => ({ ...prev, [name]: value }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,24 +25,24 @@ const Register = () => {
     }
 
     // else, sign user in 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((res) => {
-        const id = res.user.uid;
-        const docRef = doc(collectionRef, id);
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const id = res.user.uid;
+      const docRef = doc(collectionRef, id);
         
-        // after signup user, set user details to the database
-        setDoc(docRef, {
-          id, name, email, createdAt: Timestamp.now(), isOnline: true, lastMsg : ""
-        })
-        .then(() => {
-          // reset form data and navigate to home page
-          setData(initialData)
-          setLoading(false)
-          navigate("/")
-        })
-        .catch((err) => setError(`Failed to register user info. ${err.message}`))
+      // after signup user, set user details to the database
+      await setDoc(docRef, {
+        id, name, email, createdAt: Timestamp.now(), isOnline: true, lastMsg : ""
       })
-      .catch((err) => setError(`Failed to Create Account. ${err.message}`))
+      // reset form data and navigate to home page
+      setName("");
+      setEmail("");
+      setPassword("");
+      setLoading(false)
+      navigate("/")
+    } catch (err) {
+      setError(`Failed to Create Account. ${err.message}`)
+    }
   };
 
   return (
@@ -63,30 +53,27 @@ const Register = () => {
           <label htmlFor="name">Name</label>
           <input
             type="text"
-            name="name"
             id="name"
             value={name}
-            onChange={handleChange}
+            onChange={e => setName(e.target.value)}
           />
         </article>
         <article>
           <label htmlFor="email">Email</label>
           <input
             type="email"
-            name="email"
             id="email"
             value={email}
-            onChange={handleChange}
+            onChange={e => setEmail(e.target.value)}
           />
         </article>
         <article>
           <label htmlFor="password">Password</label>
           <input
             type="password"
-            name="password"
             id="password"
             value={password}
-            onChange={handleChange}
+            onChange={e => setPassword(e.target.value)}
           />
         </article>
         {state.error && <p className="error">{state.error}</p>}

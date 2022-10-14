@@ -22,7 +22,7 @@ const MessageForm = () => {
   // creating a unique merged id for -current user & -selected user conversation
   const mergeId = user1 > user2 ?  `${user1 + "-" + user2}` :  `${user2 + "-" + user1}`; 
 
-  async function AddDoc(url) {
+  const AddDoc = async (url) => {
     const data = {
       chatText,
       from: user1,
@@ -30,29 +30,28 @@ const MessageForm = () => {
       createdAt: Timestamp.now(),
       media: url,
     };
+    const docRefce = collection( db, `${collectionNames.messages}`, mergeId, `${collectionNames.chat}`)
 
     // creating a firebase sub collection
     // database | messages | mergeId | chat | document
-    const docRefce = collection( db, `${collectionNames.messages}`, mergeId, `${collectionNames.chat}`)
-    addDoc(docRefce, { ...data })
-      .then(() => {
-        // set last message on every message sent to the selected user
-        // to current user document path
-        const docRef = doc(db, `${collectionNames.chatApp}`, user2);
-        updateDoc(docRef, { lastMsg: { ...data } })
-          .then(() => {
-            // clear the formal lastSeen message from the second user, acknoledging
-            // that we have seen the last message
-            const docRef2 = doc(db, `${collectionNames.chatApp}`, user1);
-            updateDoc(docRef2, { lastMsg: "" });
-          })
+    try {
+      await addDoc(docRefce, { ...data });
+      // set last message on every message sent to the selected user
+      // to current user document path
+      const docRef = doc(db, `${collectionNames.chatApp}`, user2);
+      await updateDoc(docRef, { lastMsg: { ...data } });
 
-        // reset Text and Img
-        setChatText("");
-        setChatImg("");
-        setLoading(false);
-      })
-      .catch((err) => setError(err.message));
+      // clear the formal lastSeen message from the second user, acknoledging
+      // that we have seen the last message
+      const docRef2 = doc(db, `${collectionNames.chatApp}`, user1);
+      await updateDoc(docRef2, { lastMsg: "" });
+      // reset Text and Img
+      setChatText("");
+      setChatImg("");
+      setLoading(false);
+    } catch (err) {
+      setError(err.message)
+    }
   }
 
 

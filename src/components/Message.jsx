@@ -27,17 +27,15 @@ const Message = ({id, chatText, createdAt, from, media}) => {
       
       // after confirming delete, check if media is present and delete the Doc media message
       if (media) {
-        deleteDoc(docRef).then(() => console.log("deleted successfully"))
+        await deleteDoc(docRef)
       }
 
       // if both media and chat is present, update the doc, and set chat text to "deleted"
-      updateDoc(docRef, { chatText: "🚫 deleted" }).then(() => {
-        console.log("updated successfully");
-      });
+      await updateDoc(docRef, { chatText: "🚫 deleted" })
 
       // delete item after 15sec in conversation page
-      setTimeout(() => {
-        deleteDoc(docRef).then(() => console.log("deleted successfully"))
+      setTimeout(async () => {
+       await deleteDoc(docRef)
       }, 15000);
     }
   }

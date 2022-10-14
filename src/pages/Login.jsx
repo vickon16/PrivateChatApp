@@ -6,21 +6,11 @@ import { auth, collectionRef } from "../firebase-config";
 import Loader from "../components/Loader";
 import { doc, updateDoc } from "firebase/firestore";
 
-const initialData = {
-  email: "",
-  password: "",
-};
-
 const Login = () => {
   const { state, setLoading, setError } = useAuth();
-  const [{ email, password }, setData] = useState(initialData);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const navigate = useNavigate();
-
-  // form handle
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData((prev) => ({ ...prev, [name]: value }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,23 +24,22 @@ const Login = () => {
     }
 
     // else, sign user in 
-    signInWithEmailAndPassword(auth, email, password)
-      .then((res) => {
-        const id = res.user.uid;
-        const docRef = doc(collectionRef, id);
+    try {
+      const resp = await signInWithEmailAndPassword(auth, email, password);
+      const id = resp.user.uid;
+      const docRef = doc(collectionRef, id);
 
-        // after signin user in, update user details to database
-        // with isOnline set to true
-        updateDoc(docRef, {isOnline: true})
-          .then(() => {
-            // reset form data and navigate to home page
-            setData(initialData);
-            setLoading(false)
-            navigate("/")
-          })
-          .catch((err) => setError(`Failed to Log in. ${err.message}`))
-      })
-      .catch((err) => setError(`Failed to Log in. ${err.message}`))
+      // after signin user in, update user details to database
+      // with isOnline set to true
+      await updateDoc(docRef, {isOnline: true})
+      // reset form data and navigate to home page
+      setEmail("");
+      setPassword("");
+      setLoading(false)
+      navigate("/")
+    } catch (err) {
+      setError(`Failed to Log in. ${err.message}`)
+    }
   };
 
   return (
@@ -61,20 +50,18 @@ const Login = () => {
           <label htmlFor="email">Email</label>
           <input
             type="email"
-            name="email"
             id="email"
             value={email}
-            onChange={handleChange}
+            onChange={e => setEmail(e.target.value)}
           />
         </article>
         <article>
           <label htmlFor="password">Password</label>
           <input
             type="password"
-            name="password"
             id="password"
             value={password}
-            onChange={handleChange}
+            onChange={e => setPassword(e.target.value)}
           />
         </article>
         {state.error && <p className="error">{state.error}</p>}
