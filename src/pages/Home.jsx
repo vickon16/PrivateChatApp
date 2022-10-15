@@ -250,6 +250,7 @@ const MessagesUser = styled.article`
   z-index: 2;
   background-color: var(--color9-Bg2);
   flex-wrap: wrap;
+  user-select: none;
 
   .selected-user {
     ${flexCenter()};
@@ -289,8 +290,9 @@ const AllMessages = styled.article`
   padding: 0 20px;
   margin-bottom: 2.5rem;
   z-index: 1;
+  user-select: none;
 
-  @media screen and (max-width : 425px) {
+  @media screen and (max-width: 425px) {
     padding: 0 10px;
-  };
+  } ;
 `;

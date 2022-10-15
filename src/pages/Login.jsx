@@ -19,7 +19,7 @@ const Login = () => {
 
     // if there is no email and password, return
     if (!email || !password) {
-      setError("All Fields are Required");
+      setError("--All Fields are Required--");
       return;
     }
 
@@ -38,21 +38,20 @@ const Login = () => {
       setLoading(false)
       navigate("/")
     } catch (err) {
-      setError(`Failed to Log in. ${err.message}`)
+      setError(`--Failed to Log in--. ${err.message}`)
     }
   };
 
   return (
     <section>
       <h3>Log In to your account</h3>
-      <form autoComplete="off" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="loginEmail">Email</label>
           <input
             type="email"
             id="loginEmail"
             value={email}
-            autoComplete="false"
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
@@ -62,7 +61,6 @@ const Login = () => {
             type="password"
             id="loginPassword"
             value={password}
-            autoComplete="new-password"
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>

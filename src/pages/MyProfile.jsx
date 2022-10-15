@@ -12,8 +12,7 @@ import { Link } from "react-router-dom";
 
 const MyProfile = () => {
   const [img, setImg] = useState("");
-  const { 
-    state: { user, userAppData, loading, error }, setError, setLoading,
+  const {state: { user, userAppData, loading, error }, setError, setLoading,
   } = useAuth();
 
   useEffect(() => {
@@ -23,45 +22,41 @@ const MyProfile = () => {
     const imgSize = img.size / 1024; 
     // check if image size is greater than 2.5mb
     if (imgSize > 2500) {
-      setError("Files size is too large, Select another image")
+      setError("--Files size is too large, Select another image--")
       setImg("");
       return;
     }
 
     // else
-    setLoading(true);
-    setError("");
+    const postProfileImg = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-    // else if there is already an existing user image in the app, delete from storage
-    if (userAppData?.image?.url) {
-      deleteObject(ref(storage, userAppData.image.url)).then(() => {})
-      .catch(err => setError(`Couldn't delete previous image ${err.message}`))
+        // else if there is already an existing user image in the app, delete from storage
+        if (userAppData?.image?.url) {
+          await deleteObject(ref(storage, userAppData.image.url));
+        }
+
+        // else, create a new image for user
+        const imgName = `${new Date().getTime()}-${img.name}`;
+        const storageRef = ref(storage, `${storageNames.chatAppImages_Avatar}${imgName}`);
+
+        const snapshot = await uploadBytes(storageRef, img);
+        const url = await getDownloadURL(ref(storage, snapshot.ref.fullPath));
+        
+        // update firestore database with new Image
+        const docRef = doc(collectionRef, user.uid);
+        await updateDoc(docRef, { image: { name: imgName, url } })
+      } catch (err) {
+        setError(`Failed to upload image . ${err.message}`)
+      } finally {
+        setLoading(false);
+        setImg("")
+      }
     }
 
-    // else, create a new image for user
-    const imgName = `${new Date().getTime()}-${img.name}`;
-    const storageRef = ref(storage, `${storageNames.chatAppImages_Avatar}${imgName}`);
-    
-
-    uploadBytes(storageRef, img).then((snapshot) => {
-      getDownloadURL(ref(storage, snapshot.ref.fullPath))
-        .then((url) => {
-          const docRef = doc(collectionRef, user.uid);
-
-          // update firestore database with new Image
-          updateDoc(docRef, { image: { name: imgName, url } })
-            .then(() => setLoading(false))
-            .catch((err) => {
-              setError(`Failed to register image. ${err.message}`);
-            });
-        })
-        .catch((err) => setError(`Failed to get Image url ${err.message}`));
-      })
-      .catch((err) => {
-        setError(`Failed to upload image . ${err.message}`);
-      })
-      // set image value back to being an empty string
-      .finally(() => setImg(""));
+    postProfileImg()
   }, [img]);
 
   return (

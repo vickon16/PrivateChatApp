@@ -20,7 +20,7 @@ const Register = () => {
 
     // if there is no email and password, return
     if (!name || !email || !password) {
-      setError("All Fields are Required");
+      setError("--All Fields are Required--");
       return;
     }
 
@@ -41,21 +41,20 @@ const Register = () => {
       setLoading(false)
       navigate("/")
     } catch (err) {
-      setError(`Failed to Create Account. ${err.message}`)
+      setError(`--Failed to Create Account--. ${err.message}`)
     }
   };
 
   return (
     <section>
       <h3>Create An Account</h3>
-      <form autoComplete="off" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="regName">Name</label>
           <input
             type="text"
             id="regName"
             value={name}
-            autoComplete="false"
             onChange={(e) => setName(e.target.value)}
           />
         </div>
@@ -65,7 +64,6 @@ const Register = () => {
             type="email"
             id="regEmail"
             value={email}
-            autoComplete="false"
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
@@ -75,7 +73,6 @@ const Register = () => {
             type="password"
             id="regPassword"
             value={password}
-            autoComplete="new-password"
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>

@@ -15,17 +15,15 @@ const Navbar = () => {
 const {state: { user, userAppData }} = useAuth();
 const {darkMode, setNavOpen, toggleMode } = useGeneralContext();
 
-const logout = () => {
+const logout = async () => {
   // update doc
   const confirm = window.confirm("Are you sure you want to Log out?");
   if (!confirm) return;
 
   const docRef = doc(collectionRef, user?.uid);
-  updateDoc(docRef, { isOnline: false }).then(() => {
-    // afterwards, sign user out
-    signOut(auth)
-  });
-  
+  await updateDoc(docRef, { isOnline: false });
+  // afterwards, sign user out
+  signOut(auth)
 };
 
   return (

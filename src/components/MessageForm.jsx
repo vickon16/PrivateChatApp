@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, Timestamp, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
 import { FaUpload } from "react-icons/fa";
@@ -30,12 +30,12 @@ const MessageForm = () => {
       createdAt: Timestamp.now(),
       media: url,
     };
-    const docRefce = collection( db, `${collectionNames.messages}`, mergeId, `${collectionNames.chat}`)
 
     // creating a firebase sub collection
     // database | messages | mergeId | chat | document
     try {
-      await addDoc(docRefce, { ...data });
+      const docRefrce = collection( db, `${collectionNames.messages}`, mergeId, `${collectionNames.chat}`)
+      await addDoc(docRefrce, { ...data });
       // set last message on every message sent to the selected user
       // to current user document path
       const docRef = doc(db, `${collectionNames.chatApp}`, user2);
@@ -66,18 +66,21 @@ const MessageForm = () => {
       const imgSize = chatImg.size / 1024;
       // check if image size is greater than 2.5mb
       if (imgSize > 2500) {
-        setError("Files size is too large, Select another image");
+        setError("--Files size is too large, Select another image--");
         setChatImg("");
         return;
       }
       
       const imgName = `${new Date().getTime()}-${chatImg.name}`;
       const imgRef = ref(storage, `${storageNames.chatAppImages_ChatImages}${imgName}`);
-      uploadBytes(imgRef, chatImg).then((snapshot) => {
-        getDownloadURL(ref(storage, snapshot.ref.fullPath))
-          .then((url) => AddDoc(url))
-          .catch((err) => setError(`Failed to get path. ${err.message}`));
-      }).catch(err => setError(`Failed to upload img. ${err.message}`))
+
+      try {
+        const snapshot = await uploadBytes(imgRef, chatImg);
+        const url = await getDownloadURL(ref(storage, snapshot.ref.fullPath));
+        AddDoc(url)
+      } catch (err) {
+        setError(`--Failed to upload img--. ${err.message}`)
+      }
       return;
     }
 

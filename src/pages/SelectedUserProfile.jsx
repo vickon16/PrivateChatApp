@@ -1,11 +1,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import { flexCenter, formatDate } from "../globalFunctions";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useChat } from "../context/chatContext";
+import { useAuth } from "../context/userAuthContext";
+import { collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
+import { collectionNames, db } from "../firebase-config";
 
 const SelectedUserProfile = () => {
-  const { state: { selectedUser }} = useChat();
+  const {state : {user}} = useAuth();
+  const { state: { selectedUser, error }, setError} = useChat();
+  const navigate = useNavigate();
+
+   const handleClearChats = async () => {
+     const user1 = user.uid; // current user id
+     const user2 = selectedUser?.id; // selected user id
+
+     const mergeId = user1 > user2 ? `${user1 + "-" + user2}` : `${user2 + "-" + user1}`;
+
+     try {
+       const docRef = collection( db, `${collectionNames.messages}`, mergeId, `${collectionNames.chat}`)
+       
+       // get all the documents in the subcollection path
+       const docs = await getDocs(docRef);
+      //  loop through and delete each of their refrences
+       docs.docs.forEach(async (doc) => await deleteDoc(doc.ref))
+       
+       // set the last messages of the both users back to empty strings;
+       const docRefUser1 = doc(db, `${collectionNames.chatApp}`, user1);
+       const docRefUser2 = doc(db, `${collectionNames.chatApp}`, user2);
+       await updateDoc(docRefUser1, { lastMsg: "" });
+       await updateDoc(docRefUser2, { lastMsg: "" });
+       navigate("/");
+     } catch (err) {
+      setError("--Failed to Delete Chats--." + err.message)
+     }
+   };
 
   return (
     <Wrapper>
@@ -24,7 +54,10 @@ const SelectedUserProfile = () => {
         ) : (
           <>
             <article className="img-container">
-              <img src={selectedUser.image?.url || "/user-icon.png"} alt="profile-img" />
+              <img
+                src={selectedUser.image?.url || "/user-icon.png"}
+                alt="profile-img"
+              />
             </article>
             <Content>
               <h3>{selectedUser.name}</h3>
@@ -35,10 +68,14 @@ const SelectedUserProfile = () => {
               </small>
             </Content>
             <article className="button-wrapper">
+              <button className="btn" onClick={handleClearChats}>
+                Clear Chats
+              </button>
               <Link to="/" className="btn">
                 Back to Home
               </Link>
             </article>
+            {error && <p className="error">{error}</p>}
           </>
         )}
       </Container>
@@ -107,7 +144,11 @@ const Container = styled.div`
 
   .button-wrapper {
     width: 100%;
-    ${flexCenter("flex-end")}
+    ${flexCenter("flex-end")};
+    
+    .btn {
+      margin-right: .8rem;
+    }
   }
 
   @media screen and (max-width: 425px) {

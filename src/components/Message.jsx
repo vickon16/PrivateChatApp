@@ -102,6 +102,7 @@ const Deviation = styled.div`
   border: 2px solid var(--color7-Dark2);
   ${flexCenter("space-between", "column", "flex-start")};
   gap: 10px;
+  user-select: none;
   background-color: ${({ owner }) =>
     owner === "me" ? "var(--color8-Blue2)" : "var(--color6-Dark)"};
 
