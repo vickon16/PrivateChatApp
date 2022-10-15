@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, Timestamp, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
 import { FaUpload } from "react-icons/fa";
