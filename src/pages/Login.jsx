@@ -47,18 +47,20 @@ const Login = () => {
       <h3>Log In to your account</h3>
       <form autoComplete="off" onSubmit={handleSubmit}>
         <div className="input-group">
-          <label>Email</label>
+          <label htmlFor="loginEmail">Email</label>
           <input
             type="email"
+            id="loginEmail"
             value={email}
             autoComplete="false"
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="input-group">
-          <label>Password</label>
+          <label htmlFor="loginPassword">Password</label>
           <input
             type="password"
+            id="loginPassword"
             value={password}
             autoComplete="new-password"
             onChange={(e) => setPassword(e.target.value)}

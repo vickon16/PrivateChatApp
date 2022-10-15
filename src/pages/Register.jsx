@@ -50,27 +50,30 @@ const Register = () => {
       <h3>Create An Account</h3>
       <form autoComplete="off" onSubmit={handleSubmit}>
         <div className="input-group">
-          <label>Name</label>
+          <label htmlFor="regName">Name</label>
           <input
             type="text"
+            id="regName"
             value={name}
             autoComplete="false"
             onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div className="input-group">
-          <label>Email</label>
+          <label htmlFor="regEmail">Email</label>
           <input
             type="email"
+            id="regEmail"
             value={email}
             autoComplete="false"
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="input-group">
-          <label>Password</label>
+          <label htmlFor="regPassword">Password</label>
           <input
             type="password"
+            id="regPassword"
             value={password}
             autoComplete="new-password"
             onChange={(e) => setPassword(e.target.value)}
